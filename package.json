@@ -1,0 +1,88 @@
+{
+  "name": "r-chunk-keybindings",
+  "displayName": "R Chunk Keybindings",
+  "description": "Custom keybindings for R code chunks",
+  "version": "0.0.1",
+  "publisher": "JakeJing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JakeJing/r-chunk-keybindings.git"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Keymaps"
+  ],
+  "activationEvents": [
+    "onLanguage:rmd",
+    "onLanguage:quarto"
+  ],
+  "main": "./extension.js",
+  "dependencies": {
+    "@posit-dev/positron": "latest"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "rChunk.selectWholeChunk",
+        "title": "R Chunk: Select Whole Chunk"
+      },
+      {
+        "command": "rChunk.moveToChunkStart",
+        "title": "R Chunk: Move to Chunk Start"
+      },
+      {
+        "command": "rChunk.moveToChunkEnd",
+        "title": "R Chunk: Move to Chunk End"
+      },
+      {
+        "command": "r.selectWord",
+        "title": "R: Select Word at Cursor"
+      },
+      {
+        "command": "r.viewObject",
+        "title": "R: View Object at Cursor"
+      },
+      {
+        "command": "r.headObject",
+        "title": "R: Head Object at Cursor"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "rChunk.selectWholeChunk",
+        "key": "ctrl+s",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      },
+      {
+        "command": "rChunk.moveToChunkStart",
+        "key": "ctrl+a",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      },
+      {
+        "command": "rChunk.moveToChunkEnd",
+        "key": "ctrl+e",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      },
+      {
+        "command": "r.selectWord",
+        "key": "ctrl+w",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      },
+      {
+        "command": "r.viewObject",
+        "key": "cmd+u",
+        "mac": "cmd+u",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      }, 
+      {
+        "command": "r.headObject",
+        "key": "cmd+h",
+        "mac": "cmd+h",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      }
+    ]
+  }
+}
