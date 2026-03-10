@@ -48,6 +48,10 @@
       {
         "command": "r.headObject",
         "title": "R: Head Object at Cursor"
+      }, 
+      {
+        "command": "r.centerCursor",
+        "title": "R: Center Cursor in Editor"
       }
     ],
     "keybindings": [
@@ -81,6 +85,11 @@
         "command": "r.headObject",
         "key": "cmd+h",
         "mac": "cmd+h",
+        "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
+      }, 
+      {
+        "command": "r.centerCursor",
+        "key": "shift+ctrl+c",
         "when": "editorTextFocus && (editorLangId == 'rmd' || editorLangId == 'quarto')"
       }
     ]

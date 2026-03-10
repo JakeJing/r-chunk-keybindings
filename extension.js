@@ -31,6 +31,7 @@ function findChunkBounds(document,cursorLine) {
   return {startLine,endLine};
 }
 
+// Standalone reusable center function — also registered as r.centerCursor
 function centerCursor(editor) {
   const pos=editor.selection.active;
   editor.revealRange(
@@ -52,14 +53,11 @@ function resolveWord(editor) {
   return doc.getText(wordRange);
 }
 
-// Strip trailing pipes (%>% or |>) including surrounding whitespace/newlines
 function stripTrailingPipes(code) {
   return code.replace(/\s*(%>%|\|>)\s*$/g,'').trim();
 }
 
-// Shared helper: execute R code via Positron API, fallback to terminal
 async function executeRCode(code) {
-  // Strategy 1: Positron native global API
   const positron=tryAcquirePositronApi();
   if(positron) {
     try {
@@ -70,7 +68,6 @@ async function executeRCode(code) {
     }
   }
 
-  // Strategy 2: Positron built-in command fallback
   try {
     await vscode.commands.executeCommand(
       'workbench.action.executeCode.console',
@@ -81,7 +78,6 @@ async function executeRCode(code) {
     console.error('workbench.action.executeCode.console failed:',err);
   }
 
-  // Strategy 3: Last resort — send to any R terminal
   let terminal=vscode.window.terminals.find(
     t => t.name==='R'||t.name.startsWith('R ')
   );
@@ -94,6 +90,15 @@ async function executeRCode(code) {
 }
 
 function activate(context) {
+
+  // Shift+Ctrl+C → Center the viewport on the current cursor position
+  context.subscriptions.push(
+    vscode.commands.registerCommand('r.centerCursor',() => {
+      const editor=vscode.window.activeTextEditor;
+      if(!editor) return;
+      centerCursor(editor);
+    })
+  );
 
   // Ctrl+S → Select whole chunk INCLUDING the ```{r} and ``` fences
   context.subscriptions.push(
@@ -195,8 +200,7 @@ function activate(context) {
     })
   );
 
-  // Cmd+H → Run head(<word or selection>) in the Positron R console,
-  //         strip trailing pipes, then return focus to the editor
+  // Cmd+H → Run head(<word or selection>), strip trailing pipes, return focus
   context.subscriptions.push(
     vscode.commands.registerCommand('r.headObject',async () => {
       const editor=vscode.window.activeTextEditor;
@@ -209,11 +213,9 @@ function activate(context) {
         return;
       }
 
-      // Strip trailing %> % or |> before wrapping in head()
       const clean=stripTrailingPipes(raw);
       await executeRCode(`head(${clean})`);
 
-      // Return focus to the editor after executing
       await vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup');
     })
   );
